@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, View, TextInput, Button, Text } from 'react-native';
+import { StyleSheet, View, TextInput, Button, Text, FlatList, Modal } from 'react-native';
 import uuid from 'react-native-uuid';
 
 
@@ -8,6 +8,8 @@ export default function App() {
   const [newTitle, setnewTitle] = useState(""); 
   const [newPrice, setNewPrice] = useState(""); 
   const [products, setProducts] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false); 
+  const [productSelected, setProductSelected] = useState([]);
 
 
   const handleAdd = () => {
@@ -21,7 +23,22 @@ export default function App() {
     setProducts(current => [...current, productDescription])
     setnewTitle("");
     setNewPrice("");
+  };
+  
+
+  const handleModal = (item) => {
+    setProductSelected(item)
+    setModalVisible(true)
+  }; 
+
+
+  const handleDelete = () => {
+    setProducts(current => current.filter(product => product.id !== productSelected.id)); 
+    setModalVisible(false); 
   }
+
+
+
 
 
   return (
@@ -40,16 +57,26 @@ export default function App() {
         <Button title="Add" onPress={handleAdd}/>
       </View>
       <View style={styles.itemsContainer}>
-        {
-          products.map(product => 
-            <View style={styles.items} key={product.id}>
-              <Text>{product.title}</Text>
-              <Text>{product.price}</Text>
-              <Button title="Delete"/>
-            </View>
-          )
-        }
+        <FlatList
+          data={products}
+          keyExtractor={item => item.id}
+          renderItem={({item}) => 
+            <View style={styles.items}>
+            <Text>{item.title}</Text>
+            <Text>{item.price}</Text>
+            <Button title="Delete" onPress={()=> handleModal(item)} />
+          </View>
+          }/>
       </View>
+      <Modal
+        visible={modalVisible}>
+          <View>
+            <Text>"{productSelected.title} {productSelected.price}"</Text>
+            <Text>Are you sure you want to delete this product?</Text>
+            <Button title='Delete' onPress={handleDelete}/>
+            <Button title='Close' onPress={()=> setModalVisible(false)}/>
+          </View>
+      </Modal>
     </View>
   );
 }
