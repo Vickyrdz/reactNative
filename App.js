@@ -3,10 +3,10 @@ import { StyleSheet, View, TextInput, Button, Text, FlatList, Modal } from 'reac
 import uuid from 'react-native-uuid';
 
 
+
 export default function App() {
 
   const [newTitle, setnewTitle] = useState(""); 
-  const [newPrice, setNewPrice] = useState(""); 
   const [products, setProducts] = useState([]);
   const [modalVisible, setModalVisible] = useState(false); 
   const [productSelected, setProductSelected] = useState([]);
@@ -17,12 +17,10 @@ export default function App() {
     const productDescription = {
       id: uuid.v4(),
       title: newTitle, 
-      price: newPrice
     };
 
     setProducts(current => [...current, productDescription])
     setnewTitle("");
-    setNewPrice("");
   };
   
 
@@ -38,45 +36,44 @@ export default function App() {
   }
 
 
-
-
-
   return (
     <View style={styles.container}>
-      <View style={styles.firstBlockContainer}>
-        <TextInput 
-          style={styles.input}
-          placeholder='Product Name..'
-          value={newTitle}
-          onChangeText={(t) => setnewTitle(t)}/>
-        <TextInput 
-          style={styles.input}
-          placeholder='Price..'
-          value={newPrice}
-          onChangeText={(t) => setNewPrice(t)}/>
-        <Button title="Add" onPress={handleAdd}/>
+      <View style={styles.containerNewShoppList}>
+        <View style={styles.containerTitle}>
+          <Text style={styles.title}>
+            New List
+          </Text>
+        </View>
+        <View style={styles.firstBlockContainer}>
+          <TextInput 
+            style={styles.input}
+            placeholder='Product Name..'
+            value={newTitle}
+            onChangeText={(t) => setnewTitle(t)}/>
+          <Button title="Add" onPress={handleAdd}/>
+        </View>
+        <View style={styles.itemsContainer}>
+          <FlatList
+            data={products}
+            keyExtractor={item => item.id}
+            renderItem={({item}) => 
+              <View style={styles.items}>
+              <Text>{item.title}</Text>
+              <Text>{item.price}</Text>
+              <Button title="Delete" onPress={()=> handleModal(item)} />
+            </View>
+            }/>
+        </View>
+        <Modal
+          visible={modalVisible}>
+            <View>
+              <Text>"{productSelected.title}"</Text>
+              <Text>Are you sure you want to delete this product?</Text>
+              <Button title='Delete' onPress={handleDelete}/>
+              <Button title='Close' onPress={()=> setModalVisible(false)}/>
+            </View>
+        </Modal>
       </View>
-      <View style={styles.itemsContainer}>
-        <FlatList
-          data={products}
-          keyExtractor={item => item.id}
-          renderItem={({item}) => 
-            <View style={styles.items}>
-            <Text>{item.title}</Text>
-            <Text>{item.price}</Text>
-            <Button title="Delete" onPress={()=> handleModal(item)} />
-          </View>
-          }/>
-      </View>
-      <Modal
-        visible={modalVisible}>
-          <View>
-            <Text>"{productSelected.title} {productSelected.price}"</Text>
-            <Text>Are you sure you want to delete this product?</Text>
-            <Button title='Delete' onPress={handleDelete}/>
-            <Button title='Close' onPress={()=> setModalVisible(false)}/>
-          </View>
-      </Modal>
     </View>
   );
 }
@@ -84,11 +81,30 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#f7f4f4"
+  },
+  containerNewShoppList: {
     backgroundColor: '#fff',
     justifyContent: "start",
     alignItems: "center",
-    marginTop: 50,
+    marginTop: 90,
+    height: "85%",
+    width: "80%",
+    alignSelf: "center",
+    borderRadius: 20
     
+  },
+  containerTitle:{
+    backgroundColor:"#2196f3",
+    width: 150,
+    height: 50,
+    borderRadius: 50
+  },
+  title: {
+    color: "white",
+    fontSize: 24,
+    fontWeight: "bold"
+ 
   },
   input: {
     borderWidth: 1,
@@ -99,7 +115,9 @@ const styles = StyleSheet.create({
   firstBlockContainer: {
     flexDirection: 'row',
     alignSelf: 'stretch', 
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
+    marginTop: "10%"
+
   },
   itemsContainer:{
     width: "100%"
