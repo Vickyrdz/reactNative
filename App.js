@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { StyleSheet, View, TextInput, Button, Text, FlatList, Modal } from 'react-native';
 import uuid from 'react-native-uuid';
+import ModalDelete from './src/components/ModalDelete/ModalDelete';
+import AddProduct from './src/components/AddProduct/AddProduct';
+import ItemList from './src/components/ItemList/ItemList';
 
 
 
@@ -33,7 +36,8 @@ export default function App() {
   const handleDelete = () => {
     setProducts(current => current.filter(product => product.id !== productSelected.id)); 
     setModalVisible(false); 
-  }
+  }; 
+
 
 
   return (
@@ -44,35 +48,23 @@ export default function App() {
             New List
           </Text>
         </View>
-        <View style={styles.firstBlockContainer}>
-          <TextInput 
-            style={styles.input}
-            placeholder='Product Name..'
-            value={newTitle}
-            onChangeText={(t) => setnewTitle(t)}/>
-          <Button title="Add" onPress={handleAdd}/>
-        </View>
+        <AddProduct 
+          newTitle={newTitle} 
+          handleAdd={handleAdd}
+          setnewTitle={setnewTitle}
+        />
         <View style={styles.itemsContainer}>
-          <FlatList
-            data={products}
-            keyExtractor={item => item.id}
-            renderItem={({item}) => 
-              <View style={styles.items}>
-              <Text>{item.title}</Text>
-              <Text>{item.price}</Text>
-              <Button title="Delete" onPress={()=> handleModal(item)} />
-            </View>
-            }/>
+          <ItemList 
+            products={products} 
+            handleModal={handleAdd}
+          />
         </View>
-        <Modal
-          visible={modalVisible}>
-            <View>
-              <Text>"{productSelected.title}"</Text>
-              <Text>Are you sure you want to delete this product?</Text>
-              <Button title='Delete' onPress={handleDelete}/>
-              <Button title='Close' onPress={()=> setModalVisible(false)}/>
-            </View>
-        </Modal>
+        <ModalDelete 
+          productSelected = {productSelected}
+          setModalVisible = {setModalVisible}
+          modalVisible = {modalVisible}
+          handleDelete = {handleDelete}
+        />
       </View>
     </View>
   );
@@ -98,27 +90,19 @@ const styles = StyleSheet.create({
     backgroundColor:"#2196f3",
     width: 150,
     height: 50,
-    borderRadius: 50
+    borderRadius: 50,
+    justifyContent: "center",
+    position: "relative",
+    bottom: 20,
   },
   title: {
     color: "white",
     fontSize: 24,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    alignSelf: "center",
  
   },
-  input: {
-    borderWidth: 1,
-    paddingHorizontal: 10, 
-    paddingVertical: 5,
-    width: 180,
-  }, 
-  firstBlockContainer: {
-    flexDirection: 'row',
-    alignSelf: 'stretch', 
-    justifyContent: 'space-around',
-    marginTop: "10%"
-
-  },
+  
   itemsContainer:{
     width: "100%"
   },
