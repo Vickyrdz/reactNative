@@ -1,4 +1,4 @@
-import { StyleSheet, View, TextInput, Button} from 'react-native';
+import { StyleSheet, View, TextInput, Pressable, Text} from 'react-native';
 
 
 const AddProduct = ({newTitle, handleAdd, setnewTitle}) => {
@@ -9,10 +9,13 @@ const AddProduct = ({newTitle, handleAdd, setnewTitle}) => {
             placeholder='Product Name..'
             value={newTitle}
             onChangeText={(t) => setnewTitle(t)}/>
-          <Button title="Add" onPress={handleAdd}/>
+          <Pressable onPress={handleAdd} style={styles.button}>
+            <Text style={styles.textAdd} >Add</Text>
+          </Pressable>
         </View>
     )
 }
+
 
 
 const styles = StyleSheet.create({
@@ -29,7 +32,23 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10, 
         paddingVertical: 5,
         width: 180,
+        textAlign: 'center',
+        borderColor: "#9ca3af",
+        color: "#9ca3af",
+        borderRadius: 15,
+        padding: "0.125rem"
       }, 
+      button: {
+        backgroundColor: "#4169e1",
+        width: 35,
+        justifyContent: 'center', 
+        alignItems: 'center',
+        borderRadius: 7
+      },
+      textAdd: {
+        color: "white", 
+        fontWeight: 'bold'
+      }
 }); 
 
 

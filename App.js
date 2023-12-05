@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, View, TextInput, Button, Text, FlatList, Modal } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import uuid from 'react-native-uuid';
 import ModalDelete from './src/components/ModalDelete/ModalDelete';
 import AddProduct from './src/components/AddProduct/AddProduct';
@@ -20,6 +20,7 @@ export default function App() {
     const productDescription = {
       id: uuid.v4(),
       title: newTitle, 
+      completed: false,
     };
 
     setProducts(current => [...current, productDescription])
@@ -45,7 +46,7 @@ export default function App() {
       <View style={styles.containerNewShoppList}>
         <View style={styles.containerTitle}>
           <Text style={styles.title}>
-            New List
+            MyListTask
           </Text>
         </View>
         <AddProduct 
@@ -56,7 +57,10 @@ export default function App() {
         <View style={styles.itemsContainer}>
           <ItemList 
             products={products} 
-            handleModal={handleAdd}
+            handleModal={handleModal}
+            setProducts={setProducts} 
+            productDescription={handleAdd}
+
           />
         </View>
         <ModalDelete 
@@ -73,21 +77,21 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f7f4f4"
+    backgroundColor: "#2c2c2c"
   },
   containerNewShoppList: {
-    backgroundColor: '#fff',
+    backgroundColor: '#444444',
     justifyContent: "start",
     alignItems: "center",
     marginTop: 90,
-    height: "85%",
+    height: "80%",
     width: "80%",
     alignSelf: "center",
-    borderRadius: 20
+    borderRadius: 20,
     
   },
   containerTitle:{
-    backgroundColor:"#2196f3",
+    backgroundColor:"#4169e1",
     width: 150,
     height: 50,
     borderRadius: 50,
